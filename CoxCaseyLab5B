@@ -1,0 +1,131 @@
+//////////////////////////////////////////////////////////////////////
+// Filename: Lab5B.cpp
+// Date: November 12, 2016
+// Programmer: Casey Cox
+//
+// Description: Program reads calculates country's average employment rate for
+//	age groups by reading a txt. file. Program then passes these values into a
+//	series of arrays before performing calculations.
+//
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <iomanip>
+
+using namespace std;
+const int SIZE = 40;
+const int COLUMN = 5;
+void getData(ifstream& inf, string n[], double tstData[][COLUMN], int count);
+void calculateHighest(double tstData[][COLUMN], int count);
+void calculateGrade(double tstData[][COLUMN], char gr[], int count);
+void print(string n[], double tstData[][COLUMN], char gr[], int count);
+
+int main()
+{
+	string names[SIZE];
+	double testData[SIZE][COLUMN];
+	char grade[SIZE];
+
+	ifstream inFile;
+
+	inFile.open("employed_15-24yrsOld.txt");
+
+	if (!inFile)
+	{
+		cout << "Cannot open the input file: ch8_Ex13Data.txt." << endl;
+		cout << "Program terminates!" << endl;
+		return 1;
+	}
+
+	cout << fixed << showpoint << setprecision(2);
+	inFile.ignore();
+
+	getData(inFile, names, testData, SIZE);
+	calculateHighest(testData, SIZE);
+	calculateGrade(testData, grade, SIZE);
+	print(names, testData, grade, SIZE);
+
+	inFile.close();
+
+	return 0;
+}
+void getData(ifstream& inf, string n[], double tstData[][COLUMN], int count)
+{
+	int i = 0;
+	int j = 0;
+	// Entering values into n[] array
+	for (i = 0; i < count; i++)
+	{
+		inf >> n[i] >> tstData[i][0] >> tstData[i][1] >> tstData[i][2] >> tstData[i][3];
+		//cout << "The Name is " << n[i] << endl;
+		//cout << "The Number is " << tstData[i][1] << endl;
+	}
+}
+void calculateHighest(double tstData[][COLUMN], int count)
+{
+	for (int i = 0; i < count; i++)
+	{
+		double max = 0.0;
+		for (int j = 1; j < COLUMN - 1; j++)
+		{
+			max = tstData[i][j];
+			if (tstData[i][j] >= max)
+			{
+				max = tstData[i][j];
+			}
+			else
+			{
+				max = max;
+			}
+		}
+		
+		tstData[i][4] = max;
+		//cout << tstData[i][4] << endl;
+	}
+
+}
+void calculateGrade(double tstData[][COLUMN], char gr[], int count)
+{
+	char H = 'H';
+	char L = 'L';
+	for (int i = 0; i < count; i++)
+	{
+		double grade = 0.0;
+		
+		for (int j = 1; j < COLUMN - 1; j++)
+		{
+			grade = tstData[i][4];
+
+		}
+			//cout << grade << endl;
+			if (grade >= 50.0)
+			{
+				gr[i] = H;
+				//cout << gr[i] << endl;
+			}
+			else if (grade < 50.0)
+			{
+				gr[i] = L;
+				//cout << gr[i] << endl;
+			}
+		
+	}
+}
+void print(string n[], double tstData[][COLUMN], char gr[], int count)
+{
+
+	int i;
+	cout << "Name" << "                   " << "1990" << "     " << "2000" << "     " << "2005" << "     " << "2012" << "     " << "Average" << "     " << "Grade" << endl;
+	for (i = 0; i < count; i++)
+	{
+		cout << n[i] << "                   " <<
+			tstData[i][1] << "     "
+			<< tstData[i][2] << "     "
+			<< tstData[i][3] << "     "
+			<< tstData[i][4] << "     "
+			<< tstData[i][4] << "     "
+			<< gr[i] << endl;
+
+	}
+}
